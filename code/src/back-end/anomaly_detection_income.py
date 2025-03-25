@@ -68,9 +68,9 @@ def fetch_income_anomaly():
             if retry > 5:
                 raise Exception('API error')
         
-        # wait 500 milliseconds on error and retry
-        time.sleep(0.5) 
-        return get_xbrl_json(accession_no, retry + 1)
+            # wait 500 milliseconds on error and retry
+            time.sleep(0.5) 
+            return get_xbrl_json(accession_no, retry + 1)
 
         return xbrl_json
 
@@ -278,4 +278,74 @@ def fetch_income_anomaly():
     print("\nGenerated Explanation:\n")
     print(explanation)
 
+    # Save the final_quarterly_income DataFrame to a CSV file
+    file_path = "quarterly_income_data.csv"
+    final_quarterly_income.to_csv(file_path, index=False)
+    print(f"\n✅ Data saved to {file_path}")
+
     return { "Data": final_quarterly_income, "Explanation": explanation}
+
+fetch_income_anomaly()
+
+def check_new_income_anomaly(new_income):
+    """
+    Checks whether a given new net income value is an anomaly.
+    
+    Parameters:
+    - new_income (float): The new Net Income value to test.
+    - final_quarterly_income (DataFrame): The existing dataset with historical Net Income values.
+    
+    Returns:
+    - A dictionary containing the new income's Z-score, anomaly status, risk score, and risk level.
+    """
+    # Load the CSV file
+    file_path = "quarterly_income_data.csv"
+    try:
+        final_quarterly_income = pd.read_csv(file_path)
+    except FileNotFoundError:
+        print(f"❌ Error: File {file_path} not found. Run `fetch_income_anomaly()` first.")
+        return
+    
+    # Ensure NetIncome column is numeric
+    final_quarterly_income["NetIncome"] = pd.to_numeric(final_quarterly_income["NetIncome"], errors='coerce')
+
+    # Compute mean and standard deviation
+    mean_income = final_quarterly_income["NetIncome"].mean()
+    std_income = final_quarterly_income["NetIncome"].std()
+
+    # Compute Z-score for new income
+    new_z_score = (new_income - mean_income) / std_income
+
+    # Define anomaly threshold (Z-score > 3 or < -3)
+    is_anomaly = abs(new_z_score) > 3
+
+    # Compute Risk Score (normalized on a scale of 0-100)
+    risk_score = min(abs(new_z_score) * 20, 100)
+
+    # Categorize Risk Level
+    if risk_score >= 80:
+        risk_level = "High Risk"
+    elif risk_score >= 50:
+        risk_level = "Medium Risk"
+    else:
+        risk_level = "Low Risk"
+
+    # Return results as a dictionary
+    result = {
+        "New Income": new_income,
+        "Z-Score": round(new_z_score, 2),
+        "Anomaly": is_anomaly,
+        "Risk Score": round(risk_score, 1),
+        "Risk Level": risk_level
+    }
+
+    return result
+
+
+# Example Usage:
+# Assume we have already run `fetch_income_anomaly()` and have `final_quarterly_income`
+new_income_value = float(input("Enter new Net Income value: "))  # Get user input
+anomaly_result = check_new_income_anomaly(new_income_value)
+
+print("\nAnomaly Check Result:")
+print(anomaly_result)
