@@ -5,10 +5,11 @@ import time
 import json
 from IPython.display import display, HTML
 from sec_api import QueryApi
+import os
 
 
 def fetch_income_anomaly():
-    SEC_KEY = "0160dfd90fb23cf8c3f199db988c402261c53c25e7f7fc303c5b0ccc7c3ef725"
+    SEC_KEY = "c2e17c12000377ff94eb5e240967a40e8d2f51c85017fce3c3948e7163a68254"
     WELLS_FARGO_CIK = "CIK0000072971"
     API_END_POINT = "https://api.sec-api.io/xbrl-to-json"
     FILLING_URL = "https://www.sec.gov/Archives/edgar/data/72971/000183988225017028/0001839882-25-017028-index.html"
@@ -283,10 +284,35 @@ def fetch_income_anomaly():
     final_quarterly_income.to_csv(file_path, index=False)
     print(f"\n✅ Data saved to {file_path}")
 
-    return { "Data": final_quarterly_income, "Explanation": explanation}
+    file_path_explanation = "explanation.txt"
+    # Write to a .txt file
+    with open(file_path_explanation, "w", encoding="utf-8") as file:
+        file.write(explanation)
 
-fetch_income_anomaly()
+    # ✅ Convert DataFrame to dictionary (JSON serializable)
+    final_quarterly_income_json = final_quarterly_income.to_dict(orient="records")  # List of dictionaries
+    return { "Data": json.dumps(final_quarterly_income_json), "Explanation": explanation}
 
+#fetch_income_anomaly()
+
+def income_data_fetch():
+    # Load the CSV file
+    file_path = os.path.join(os.path.dirname(__file__), "quarterly_income_data.csv")
+    file_path_exp = os.path.join(os.path.dirname(__file__), "explanation.txt")
+    try:
+        final_quarterly_income = pd.read_csv(file_path)
+        # ✅ Convert DataFrame to dictionary (JSON serializable)
+        final_quarterly_income_json = final_quarterly_income.to_dict(orient="records")  # List of dictionaries
+        with open(file_path_exp, "r", encoding="utf-8") as file:
+            explanation = file.read()
+        
+        print("data")
+        return {"Data": json.dumps(final_quarterly_income_json), "Explanation": explanation}
+    except FileNotFoundError:
+        print(f"❌ Error: File {file_path} not found. Run `fetch_income_anomaly()` first.")
+        return
+    
+income_data_fetch()
 def check_new_income_anomaly(new_income):
     """
     Checks whether a given new net income value is an anomaly.
@@ -344,8 +370,8 @@ def check_new_income_anomaly(new_income):
 
 # Example Usage:
 # Assume we have already run `fetch_income_anomaly()` and have `final_quarterly_income`
-new_income_value = float(input("Enter new Net Income value: "))  # Get user input
-anomaly_result = check_new_income_anomaly(new_income_value)
+# new_income_value = float(input("Enter new Net Income value: "))  # Get user input
+# anomaly_result = check_new_income_anomaly(new_income_value)
 
-print("\nAnomaly Check Result:")
-print(anomaly_result)
+# print("\nAnomaly Check Result:")
+# print(anomaly_result)

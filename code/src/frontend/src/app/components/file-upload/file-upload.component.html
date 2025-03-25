@@ -1,0 +1,42 @@
+<mat-card class="upload-container">
+  
+  <mat-card-content>
+    <div class="file-input-container">
+      <input
+        type="file"
+        id="fileInput"
+        (change)="selectFile($event)"
+        hidden
+      />
+      <label for="fileInput" class="upload-label">
+        <mat-icon>cloud_upload</mat-icon>
+        <span *ngIf="!fileName">Click or Drag & Drop to Upload</span>
+        <span *ngIf="fileName">{{ fileName }}</span>
+      </label>
+    </div>
+
+    <mat-progress-bar
+      *ngIf="progress > 0"
+      class="progress-bar"
+      color="accent"
+      [value]="progress"
+    ></mat-progress-bar>
+
+    <div class="button-container">
+      <button mat-flat-button color="primary" [disabled]="!currentFile" (click)="upload()">Upload</button>
+    </div>
+  </mat-card-content>
+
+  <mat-card-footer *ngIf="message" class="message">
+    <p>{{ message }}</p>
+  </mat-card-footer>
+</mat-card>
+
+<mat-card class="analysis-card" *ngIf="generatedAnalysis">
+  <mat-card-header>
+    <mat-card-title>Analysis Result</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>{{ generatedAnalysis }}</p>
+  </mat-card-content>
+</mat-card>

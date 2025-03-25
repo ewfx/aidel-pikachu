@@ -1,0 +1,67 @@
+/* General Styling */
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+}
+
+/* Header */
+.header {
+  background: maroon;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+
+.navbar {
+  background-color: whitesmoke; /* Matches header/footer */
+  padding: 30px 20px;
+  display: flex;
+  gap: 10px; /* Increases space between buttons */  
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px;
+  position: fixed;
+  top: 70px; 
+}
+
+.navbar button {
+  background: none;
+  border: none;
+  color: black;
+  font-size: 18px;  
+  cursor: pointer;
+  transition: color 0.3s ease;
+  /* margin: auto; */
+  margin-top: 15px;
+  align-items: center;
+}
+
+
+/* Main Content Area */
+.main-content {
+  margin-top: 120px; /* Push content below header + navbar */
+  padding: 20px;
+}
+
+/* Footer */
+.footer {
+  background: maroon;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-size: 14px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 1000;
+}
