@@ -1,15 +1,18 @@
+import os
 import fitz  # PyMuPDF
 import re
 import requests
 import json
 from bs4 import BeautifulSoup
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from transformers import pipeline
+from dotenv import load_dotenv
 
 # Hugging Face API details
-API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1"
-API_KEY = os.getenv("HUGGINGFACE_API_KEY")
+load_dotenv()  # Load environment variables from .env file
 
+API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1"
+API_KEY = os.getenv("API_KEY")
+print(f"Authorization: Bearer {API_KEY}")
 HEADERS = {"Authorization": f"Bearer {API_KEY}"}
 
 # Load PDF
