@@ -7,6 +7,8 @@ from bs4 import BeautifulSoup
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from dotenv import load_dotenv
 from performace_analysis import *
+
+from loan_table import *
 # Hugging Face API details
 load_dotenv()  # Load environment variables from .env file
 
@@ -166,6 +168,31 @@ Identify any **discrepancies, inconsistencies, or potential signs of financial f
 6. **Market & Stock Data Issues**: Any anomalies in EPS, book value, or stockholder equity?
 
 Here is the extracted text from the annual report:"""
+prompt_for_loan_table=prompt = """
+You are a financial risk analyst specializing in loan portfolio analysis. 
+Analyze the following loan portfolio data, where each value represents figures for the most recent year followed by the previous year.
+
+### Key Risk Areas to Evaluate:
+1. **Portfolio Concentration Risk**  
+   - Has the ratio of **commercial loans to consumer loans** changed significantly?  
+   - Is there **overconcentration** in a particular loan category, such as **real estate** or **credit card lending**?  
+
+2. **Credit Quality & Risk Trends**  
+   - Are there **sharp increases or declines** in specific loan categories?  
+   - Could the growth in any segment suggest **aggressive lending** or **loosening credit standards**?  
+   - Are there **potential defaults** indicated by sudden reductions in certain loan types?  
+
+3. **Liquidity & Market Exposure**  
+   - Does the portfolio shift indicate **higher risk exposure** (e.g., increased real estate construction loans)?  
+   - Could a decline in mortgage lending suggest **higher prepayments, write-offs, or loan sales**?  
+
+4. **Macroeconomic & Regulatory Considerations**  
+   - Do changes in loan segments reflect **broader economic conditions** (e.g., inflation, interest rate hikes, recession risks)?  
+   - Are there **compliance or stress test concerns** based on lending trends?"""
 analyze_filing(prompt_for_risk,bold_extracted_text)
 performance_text=extract_second_occurrence_page(pdf_path)
 analyze_filing(prompt_for_performace,performance_text)  # Analyze the full extracted text
+regex_pattern_loan_table = r"Table\s*\d+:\s*Total Loans Outstanding by Portfolio Segment and Class of\s*Financing Receivable"
+stop_phrase_loan_table = "We manage our credit risk by establishing what we believe"
+loan_table_text=extract_table_content(pdf_path, regex_pattern_loan_table, stop_phrase_loan_table)
+analyze_filing(prompt_for_loan_table,loan_table_text)  # Analyze the extracted loan table
