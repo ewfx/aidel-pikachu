@@ -6,7 +6,7 @@ import json
 from bs4 import BeautifulSoup
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from dotenv import load_dotenv
-
+from performace_analysis import *
 # Hugging Face API details
 load_dotenv()  # Load environment variables from .env file
 
@@ -115,7 +115,19 @@ def analyze_filing(content):
         if result:
             print(f"\n🔍 **Analysis Result (Section:, Chunk {i+1}):**\n")
             print(json.dumps(result, indent=4))
+def analyze_filing(static_prompt, dynamic_prompt):
+    chunks = split_text(dynamic_prompt)
+    print("Total chunks:", len(chunks))
+    
+    for i, chunk in enumerate(chunks):
+        prompt = f"{static_prompt}\n\n{chunk}\n\nProvide a structured summary highlighting potential risk indicators."
 
+        # Send the chunk to the Mistral API
+        result = query_huggingface(prompt)
+
+        if result:
+            print(f"\n🔍 **Analysis Result (Section: Chunk {i+1}):**\n")
+            print(json.dumps(result, indent=4))
 # Function to query Hugging Face AI
 def query_huggingface(text):
     payload = {"inputs": text}
@@ -130,4 +142,30 @@ def query_huggingface(text):
         return None
 
 # Analyze the extracted bold text instead of normal extracted text
-analyze_filing(bold_extracted_text)
+prompt_for_risk=""" You are a financial fraud analyst specializing in SEC filings.
+        Analyze this section of a 10-K/10-Q filing for potential red flags, inconsistencies, or signs of fraudulent activity.
+        
+        **Focus on:**
+        1. Unusual changes in revenue, expenses, or cash flow.
+        2. Legal disputes, regulatory actions, or investigations.
+        3. Discrepancies in financial statements.
+        4. Risk factors that seem downplayed.
+        5. Insider transactions or management changes."""
+prompt_for_performace="""Analyze the following financial data extracted from a company’s annual report. The figures follow this format:
+
+- First column = Current Year
+- Second column = Previous Year
+- Third column = Year before Previous Year
+
+Identify any **discrepancies, inconsistencies, or potential signs of financial fraud** by checking:
+1. **Revenue & Profit Trends**: Are there any sudden spikes or dips?
+2. **Expense Manipulation**: Any unusual reduction in expenses despite revenue growth?
+3. **Provisioning & Write-offs**: Any sharp increases/decreases in provisions that don’t match the risk profile?
+4. **Earnings Manipulation**: Any patterns suggesting earnings smoothing or aggressive accounting?
+5. **Debt & Cash Flow Anomalies**: Any inconsistencies in debt levels vs. reported profits?
+6. **Market & Stock Data Issues**: Any anomalies in EPS, book value, or stockholder equity?
+
+Here is the extracted text from the annual report:"""
+analyze_filing(prompt_for_risk,bold_extracted_text)
+performance_text=extract_second_occurrence_page(pdf_path)
+analyze_filing(prompt_for_performace,performance_text)  # Analyze the full extracted text
