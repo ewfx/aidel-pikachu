@@ -28,7 +28,7 @@ def gemini_try(prompt):
 pdf_path = "2021-annual-report.pdf"  # Change this to the actual path
 doc = fitz.open(pdf_path)
 
-# Convert all text into a single string
+    # Convert all text into a single string
 full_text = "\n".join(page.get_text("text") for page in doc)
 
 # Define the target paragraph (Risk Factors Start)
@@ -111,19 +111,19 @@ def analyze_filing(static_prompt, dynamic_prompt):
             text_data = [result.content.parts[0].text for result in result.candidates]
             print(json.dumps(text_data, indent=4))
 # Function to query Hugging Face AI
-def query_huggingface(text):
-    payload = {"inputs": text}
+# def query_huggingface(text):
+#     payload = {"inputs": text}
     
-    try:
-        response = requests.post(API_URL, headers=HEADERS, json=payload)
-        response.raise_for_status()  # Raise exception for HTTP errors
+#     try:
+#         response = requests.post(API_URL, headers=HEADERS, json=payload)
+#         response.raise_for_status()  # Raise exception for HTTP errors
 
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        print(f"API Error: {e}")
-        return None
+#             return response.json()
+#         except requests.exceptions.RequestException as e:
+#             print(f"API Error: {e}")
+#             return None
 
-# Analyze the extracted bold text instead of normal extracted text
+    # Analyze the extracted bold text instead of normal extracted text
 prompt_for_risk=""" You are a financial fraud analyst specializing in SEC filings.
         Analyze this section of a 10-K/10-Q filing for potential red flags, inconsistencies, or signs of fraudulent activity.
         
@@ -154,21 +154,21 @@ Analyze the following loan portfolio data, where each value represents figures f
 
 ### Key Risk Areas to Evaluate:
 1. **Portfolio Concentration Risk**  
-   - Has the ratio of **commercial loans to consumer loans** changed significantly?  
-   - Is there **overconcentration** in a particular loan category, such as **real estate** or **credit card lending**?  
+- Has the ratio of **commercial loans to consumer loans** changed significantly?  
+- Is there **overconcentration** in a particular loan category, such as **real estate** or **credit card lending**?  
 
 2. **Credit Quality & Risk Trends**  
-   - Are there **sharp increases or declines** in specific loan categories?  
-   - Could the growth in any segment suggest **aggressive lending** or **loosening credit standards**?  
-   - Are there **potential defaults** indicated by sudden reductions in certain loan types?  
+- Are there **sharp increases or declines** in specific loan categories?  
+- Could the growth in any segment suggest **aggressive lending** or **loosening credit standards**?  
+- Are there **potential defaults** indicated by sudden reductions in certain loan types?  
 
 3. **Liquidity & Market Exposure**  
-   - Does the portfolio shift indicate **higher risk exposure** (e.g., increased real estate construction loans)?  
-   - Could a decline in mortgage lending suggest **higher prepayments, write-offs, or loan sales**?  
+- Does the portfolio shift indicate **higher risk exposure** (e.g., increased real estate construction loans)?  
+- Could a decline in mortgage lending suggest **higher prepayments, write-offs, or loan sales**?  
 
 4. **Macroeconomic & Regulatory Considerations**  
-   - Do changes in loan segments reflect **broader economic conditions** (e.g., inflation, interest rate hikes, recession risks)?  
-   - Are there **compliance or stress test concerns** based on lending trends?"""
+- Do changes in loan segments reflect **broader economic conditions** (e.g., inflation, interest rate hikes, recession risks)?  
+- Are there **compliance or stress test concerns** based on lending trends?"""
 analyze_filing(prompt_for_risk,bold_extracted_text)
 performance_text=extract_second_occurrence_page(pdf_path)
 analyze_filing(prompt_for_performace,performance_text)  # Analyze the full extracted text

@@ -2,11 +2,10 @@ requests
 pandas 
 numpy 
 scikit-learn 
-tensorflow 
 transformers 
 sec-edgar-downloader
 flask
 flask_cors
-news-api
 torch
 sec-api
+IPython

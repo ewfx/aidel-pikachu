@@ -1,0 +1,56 @@
+<div class="dashboard-container">
+    <!-- Table Section -->
+    <div class="table-container">
+      <table mat-table [dataSource]="incomeData" class="mat-elevation-z8">
+        <!-- Quarter Column -->
+        <ng-container matColumnDef="Quarter">
+          <th mat-header-cell *matHeaderCellDef> Quarter </th>
+          <td mat-cell *matCellDef="let element"> {{ element.Quarter }} </td>
+        </ng-container>
+  
+        <!-- NetIncome Column -->
+        <ng-container matColumnDef="NetIncome">
+          <th mat-header-cell *matHeaderCellDef> Net Income </th>
+          <td mat-cell *matCellDef="let element"> {{ element.NetIncome | currency }} </td>
+        </ng-container>
+  
+        <!-- Z-Score Column -->
+        <ng-container matColumnDef="Z-Score">
+          <th mat-header-cell *matHeaderCellDef> Z-Score </th>
+          <td mat-cell *matCellDef="let element"> {{ element['Z-Score'] | number:'1.2-2' }} </td>
+        </ng-container>
+  
+        <!-- Anomaly Column -->
+        <ng-container matColumnDef="Anomaly">
+          <th mat-header-cell *matHeaderCellDef> Anomaly </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-icon *ngIf="element.Anomaly" style="color: red;">warning</mat-icon>
+            <mat-icon *ngIf="!element.Anomaly" style="color: green;">check_circle</mat-icon>
+          </td>
+        </ng-container>
+  
+        <!-- RiskScore Column -->
+        <ng-container matColumnDef="RiskScore">
+          <th mat-header-cell *matHeaderCellDef> Risk Score </th>
+          <td mat-cell *matCellDef="let element"> {{ element.RiskScore | number:'1.2-2' }} </td>
+        </ng-container>
+  
+        <!-- RiskLevel Column -->
+        <ng-container matColumnDef="RiskLevel">
+          <th mat-header-cell *matHeaderCellDef> Risk Level </th>
+          <td mat-cell *matCellDef="let element" [ngClass]="{ 'high-risk': element.RiskLevel === 'High Risk', 'low-risk': element.RiskLevel === 'Low Risk' }">
+            {{ element.RiskLevel }}
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="['Quarter', 'NetIncome', 'Z-Score', 'Anomaly', 'RiskScore', 'RiskLevel']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['Quarter', 'NetIncome', 'Z-Score', 'Anomaly', 'RiskScore', 'RiskLevel'];"></tr>
+      </table>
+    </div>
+  
+    <!-- Chart Section -->
+    <div class="chart-container">
+      <canvas #lineChart></canvas>
+    </div>
+  </div>
+  
