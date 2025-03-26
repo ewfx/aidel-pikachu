@@ -13,7 +13,7 @@ def home():
 def anomaly():
     data = request.json
     new_income = data.get('new_income')
-    return jsonify(check_new_income_anomaly(new_income))
+    return check_new_income_anomaly(new_income)
 
 @app.route("/analysis", methods=['POST'])
 @cross_origin(origins="http://localhost:4200")  # Allow frontend requests

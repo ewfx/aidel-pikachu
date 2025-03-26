@@ -1,34 +1,12 @@
 .dashboard-container {
     display: flex;
-    justify-content: space-between;
     align-items: flex-start;
     gap: 20px;
     padding: 20px;
+    /* width:150%;     */
   }
-  
-  /* Table Section */
-  .table-container {
-    width: 50%;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    overflow-x: auto;
-  }
-  
-  /* Chart Section */
-  .chart-container {
-    width: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    height: 200px;
-  }
-  
+
+
   /* Responsive Design */
   @media (max-width: 768px) {
     .dashboard-container {
@@ -40,4 +18,143 @@
       width: 100%;      
     }
   }
+
+  .column-right{
+    /* display: flex; */
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+    width:130%;
+    /* height:2500px; */
+  }
+  
+  /* Table Section */
+  .table-container {
+    width: 100%;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+  }
+  
+  /* Chart Section */
+  .chart-container {
+    width: 1000px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    height: 200px;
+  }
+
+  .form-container {
+    width: 100%;
+    max-width: 400px;  /* Limits form width for better readability */
+    margin-top : 30px; 
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+  
+  button {
+    margin-top: 10px;
+    width: 100%;
+    font-size: 16px;
+    padding: 10px;
+  }  
+  
+
+  .response-container {
+  margin-top: 40px;
+  padding: 15px;
+  background: #f8f8f8;
+  border-left: 5px solid #3f51b5;
+  border-radius: 5px;
+  font-size: 16px;
+  
+}
+
+.high-risk {
+  color: red;
+  font-weight: bold;
+}
+
+.low-risk {
+  color: green;
+  font-weight: bold;
+}
+
+.result-container {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Spacing between elements */
+  font-size: 16px; /* Ensures all text is the same size */
+  margin-bottom: 10px;
+}
+
+.warning {
+  color: red;
+}
+
+.check_circle{
+  color: green;
+}
+
+.form-response-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px; /* Spacing between form and response */
+  max-width: 900px; /* Ensures good layout */
+  margin: 20px; /* Centered horizontally */
+}
+
+.form-container, .response-container {
+  width: 48%; /* Each takes half the space */
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.response-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* High & Low Risk Coloring */
+.high-risk {
+  color: red;
+  font-weight: bold;
+}
+.low-risk {
+  color: green;
+  font-weight: bold;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .form-response-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+  .form-container, .response-container {
+    width: 100%;
+  }
+}
+
+
   

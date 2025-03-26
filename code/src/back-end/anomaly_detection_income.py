@@ -6,6 +6,7 @@ import json
 from IPython.display import display, HTML
 from sec_api import QueryApi
 import os
+from flask import jsonify
 
 
 def fetch_income_anomaly():
@@ -313,6 +314,7 @@ def income_data_fetch():
         return
     
 income_data_fetch()
+
 def check_new_income_anomaly(new_income):
     """
     Checks whether a given new net income value is an anomaly.
@@ -358,14 +360,14 @@ def check_new_income_anomaly(new_income):
 
     # Return results as a dictionary
     result = {
-        "New Income": new_income,
+        "New Income": float(new_income),  # Keep as number if needed
         "Z-Score": round(new_z_score, 2),
-        "Anomaly": is_anomaly,
+        "Anomaly": bool(is_anomaly),
         "Risk Score": round(risk_score, 1),
-        "Risk Level": risk_level
+        "Risk Level": str(risk_level)
     }
 
-    return result
+    return jsonify(result)
 
 
 # Example Usage:

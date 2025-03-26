@@ -6,5 +6,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Angular Material 15 File Upload';
+  title = 'SEC File Analysis';
+  showNavbar = true; // Initially, navbar is visible
+
+  toggleNavbar() {
+    this.showNavbar = !this.showNavbar;
+  }
 }
