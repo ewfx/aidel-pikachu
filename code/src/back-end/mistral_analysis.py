@@ -19,12 +19,29 @@ def analysis():
     API_KEY = os.getenv("API_KEY")
     # print(f"Authorization: Bearer {API_KEY}")
     HEADERS = {"Authorization": f"Bearer {API_KEY}"}
+    def classify_logprobs(avg_logprobs):
+        """
+        Classifies the avg_logprobs into confidence levels.
+    
+        :param avg_logprobs: The average log probability value (negative number).
+        :return: Confidence level as a string.
+        """
+        if avg_logprobs >= -0.5:
+            return "High Confidence"
+        elif -1.5 <= avg_logprobs < -0.5:
+            return "Medium Confidence"
+        else:
+            return "Low Confidence"
     def gemini_try(prompt):
         gemini_key=os.getenv("GEMINI_KEY")
         genai.configure(api_key=gemini_key)
         model = genai.GenerativeModel('gemini-1.5-flash')
         response = model.generate_content(prompt)
-        return response
+        text_data = response.candidates[0].content.parts[0].text
+        avg_logprobs = response.candidates[0].avg_logprobs
+        interpretation = classify_logprobs(avg_logprobs)
+
+        return {"Text":text_data,"confidence":avg_logprobs, "interpretation": interpretation}
     # Load PDF
     pdf_path = "2021-annual-report.pdf"  # Change this to the actual path
     doc = fitz.open(pdf_path)
@@ -174,11 +191,15 @@ def analysis():
     4. **Macroeconomic & Regulatory Considerations**  
     - Do changes in loan segments reflect **broader economic conditions** (e.g., inflation, interest rate hikes, recession risks)?  
     - Are there **compliance or stress test concerns** based on lending trends?"""
-    risk_text = analyze_filing(prompt_for_risk,bold_extracted_text)
+    risk_text = gemini_try(prompt_for_risk+bold_extracted_text)
     performance_text=extract_second_occurrence_page(pdf_path)
-    performance_gen_text = analyze_filing(prompt_for_performace,performance_text)  # Analyze the full extracted text
+    performance_gen_text = gemini_try(prompt_for_performace+performance_text)  # Analyze the full extracted text
     regex_pattern_loan_table = r"Table\s*\d+:\s*Total Loans Outstanding by Portfolio Segment and Class of\s*Financing Receivable"
     stop_phrase_loan_table = "We manage our credit risk by establishing what we believe"
     loan_table_text=extract_table_content(pdf_path, regex_pattern_loan_table, stop_phrase_loan_table)
-    loan_table_gen_text = analyze_filing(prompt_for_loan_table,loan_table_text)  # Analyze the extracted loan table
+    loan_table_gen_text = gemini_try(prompt_for_loan_table+loan_table_text)  # Analyze the extracted loan table
+    print("test test")
+    print(risk_text,performance_gen_text,loan_table_gen_text)
     return {"Risk": risk_text, "Performance": performance_gen_text, "LoanTable": loan_table_gen_text}
+
+# analysis()
