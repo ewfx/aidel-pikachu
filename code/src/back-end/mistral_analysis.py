@@ -192,14 +192,24 @@ def analysis():
     - Do changes in loan segments reflect **broader economic conditions** (e.g., inflation, interest rate hikes, recession risks)?  
     - Are there **compliance or stress test concerns** based on lending trends?"""
     risk_text = gemini_try(prompt_for_risk+bold_extracted_text)
+    print(risk_text)
+    risk_score=gemini_try('Can you give me a Risk Score(Low risk,Medium Risk,High Risk) based on the extracted text?'+risk_text["Text"])
+    print(risk_score)
     performance_text=extract_second_occurrence_page(pdf_path)
-    performance_gen_text = gemini_try(prompt_for_performace+performance_text)  # Analyze the full extracted text
+    performance_gen_text = gemini_try(prompt_for_performace+performance_text)  
+    performace_risk_score=gemini_try('Can you give me a Risk Score(Low risk,Medium Risk,High Risk) based on the extracted text?'+performance_gen_text["Text"])
+    print(performace_risk_score)
     regex_pattern_loan_table = r"Table\s*\d+:\s*Total Loans Outstanding by Portfolio Segment and Class of\s*Financing Receivable"
     stop_phrase_loan_table = "We manage our credit risk by establishing what we believe"
     loan_table_text=extract_table_content(pdf_path, regex_pattern_loan_table, stop_phrase_loan_table)
     loan_table_gen_text = gemini_try(prompt_for_loan_table+loan_table_text)  # Analyze the extracted loan table
+    loan_risk_score=gemini_try('Can you give me a Risk Score(Low risk,Medium Risk,High Risk) based on the extracted text?'+loan_table_gen_text["Text"])
+    print(loan_risk_score)
     print("test test")
-    print(risk_text,performance_gen_text,loan_table_gen_text)
+    entity_analysis_text=gemini_try('Overall summary of possible risks that wells fargo can face based on the report,Where should we be careful.give it like a summary'+full_text)
+    print(entity_analysis_text)
+    entity_risk_score=gemini_try('Can you give me a Risk Score(Low risk,Medium Risk,High Risk) based on the extracted text?'+entity_analysis_text["Text"])
+    print(entity_risk_score)
     return {"Risk": risk_text, "Performance": performance_gen_text, "LoanTable": loan_table_gen_text}
 
-# analysis()
+analysis()
