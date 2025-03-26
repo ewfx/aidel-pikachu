@@ -17,6 +17,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon'; // Import this
 import { AppRoutingModule } from './app-routing.module';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 const materialModules = [
   MatCardModule,
@@ -41,6 +43,8 @@ const materialModules = [
     HttpClientModule,
     NoopAnimationsModule,
     AppRoutingModule,
+    CommonModule,
+    FormsModule,
     ...materialModules
   ],
   providers: [],

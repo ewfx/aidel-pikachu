@@ -47,10 +47,55 @@
         <tr mat-row *matRowDef="let row; columns: ['Quarter', 'NetIncome', 'Z-Score', 'Anomaly', 'RiskScore', 'RiskLevel'];"></tr>
       </table>
     </div>
-  
+    
+
+    <div class="column-right">
     <!-- Chart Section -->
     <div class="chart-container">
       <canvas #lineChart></canvas>
     </div>
+
+    <!-- Form Section -->
+  <!-- Input Form -->
+  
+   <div class="form-response-wrapper">   
+  <div class="form-container">
+    <h3>Check your NET Income</h3>  
+  <form (submit)="submitIncome()">
+    <mat-form-field appearance="outline">
+      <mat-label>Enter Net Income</mat-label>
+      <input matInput type="number" [(ngModel)]="newIncome" name="newIncome" required>
+    </mat-form-field>
+    <button mat-flat-button color="primary" type="submit">Check Anomaly</button>
+</form>
+</div>
+<!-- Display Response -->
+<div *ngIf="anomalyResult" class="response-container">
+  <h3>Analysis Result:</h3>
+  <!-- <p><strong>New Income:</strong> {{ anomalyResult?.["New Income"] }}</p>
+  <p><strong>Z-Score:</strong> {{ anomalyResult?.["Z-Score"] }}</p> -->
+  
+  <div class="result-container" *ngIf="anomalyResult">
+    <strong>Result:</strong>
+    <span [ngClass]="anomalyResult?.['Anomaly'] ? 'anomalous' : 'no-anomaly'">
+      {{ anomalyResult?.['Anomaly']? 'Anomalous' : 'No Anomaly' }}
+    </span>
+    <mat-icon [style.color]="anomalyResult?.['Anomaly'] ? 'red' : 'green'">
+      {{ anomalyResult?.['Anomaly']? 'warning' : 'check_circle' }}
+    </mat-icon>
   </div>
+
+  <p><strong>Risk Score:</strong> {{ anomalyResult?.["Risk Score"] }}</p>
+  <p><strong>Risk Level:</strong> 
+    <span [ngClass]="{
+      'high-risk': anomalyResult?.['Risk Level'] === 'High Risk',
+      'low-risk': anomalyResult?.['Risk Level'] === 'Low Risk'
+    }">
+    {{ anomalyResult?.["Risk Level"] }}
+  </span>
+  </p>
+</div>
+</div>
+</div>
+</div>
   

@@ -4,6 +4,12 @@ body {
   font-family: "Poppins", sans-serif;
   background-color: #f4f4f9;
   color: #333;
+  overflow-x: hidden;
+  overflow: hidden;
+}
+
+body.mat-typography{
+  overflow-x:hidden;
 }
 
 /* Header */
@@ -24,9 +30,7 @@ body {
 .navbar {
   background-color: whitesmoke; /* Matches header/footer */
   padding: 30px 20px;
-  display: flex;
-  gap: 10px; /* Increases space between buttons */  
-  display: flex;
+  display: flex; 
   justify-content: center;
   gap: 20px;
   padding: 10px;
@@ -38,7 +42,8 @@ body {
   background: none;
   border: none;
   color: black;
-  font-size: 18px;  
+  font-size: 16px;
+  text-decoration: underline;  
   cursor: pointer;
   transition: color 0.3s ease;
   /* margin: auto; */
@@ -64,4 +69,7 @@ body {
   bottom: 0;
   width: 100%;
   z-index: 1000;
+  overflow: hidden;
 }
+
+
