@@ -26,7 +26,8 @@ Extra checks:
  5. Wells Fargo-Specific Customization – As of now the Extra checks are developed to work for Wells Fargo related data
 
 ## 🎥 Demo 
-📹 [Video Demo](#) - (https://github.com/ewfx/aidel-pikachu/artifacts/demo/Demo.mp4)
+📹 [Video Demo](#) - /artifacts/demo/Demo.mp4
+Drive Link - https://drive.google.com/file/d/1jUUPI74ZOd-A0hERTkpiy8ceUfRQcSfp/view?usp=drivesdk
 
 ## 💡 Inspiration
 Regulatory compliance teams, auditors, and investors struggle to quickly analyze vast amounts of SEC filings and financial transactions. Identifying hidden risks, fraudulent activities, or irregular transactions manually takes days or weeks.
