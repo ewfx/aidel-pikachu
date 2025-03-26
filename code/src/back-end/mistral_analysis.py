@@ -203,6 +203,42 @@ def analysis():
     loan_risk_score=gemini_try('Can you give me a Risk Score(Low risk,Medium Risk,High Risk) based on the extracted text?'+loan_table_gen_text["Text"])
     entity_analysis_text=gemini_try('Overall summary of possible risks that wells fargo can face based on the report,Where should we be careful.give it like a summary'+full_text)
     entity_risk_score=gemini_try('Can you give me a Risk Score(Low risk,Medium Risk,High Risk) based on the extracted text?'+entity_analysis_text["Text"])
+    return {"Risk": risk_text, 
+            "Performance": performance_gen_text, 
+            "LoanTable": loan_table_gen_text,
+            "RiskScore": risk_score,
+            "PerformanceScore": performace_risk_score,
+            "LoanTableScore": loan_risk_score,
+            "EntityAnalysis": entity_analysis_text,
+            "EntityRiskScore": entity_risk_score,
+            }
+            
+def table_answers():
+    def classify_logprobs(avg_logprobs):
+        """
+        Classifies the avg_logprobs into confidence levels.
+    
+        :param avg_logprobs: The average log probability value (negative number).
+        :return: Confidence level as a string.
+        """
+        if avg_logprobs >= -0.5:
+            return "High Confidence"
+        elif -1.5 <= avg_logprobs < -0.5:
+            return "Medium Confidence"
+        else:
+            return "Low Confidence"
+        
+    def gemini_try(prompt):
+        gemini_key=os.getenv("GEMINI_KEY")
+        genai.configure(api_key=gemini_key)
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        response = model.generate_content(prompt)
+        text_data = response.candidates[0].content.parts[0].text
+        avg_logprobs = response.candidates[0].avg_logprobs
+        interpretation = classify_logprobs(avg_logprobs)
+
+        return {"Text":text_data,"confidence":avg_logprobs, "interpretation": interpretation}
+
     table_checklist=gemini_try('''Anwer the following questions in single YES/NO ,dont answer anything else,there are 10 questions,I want 10 YES/NO..  1.Loan Portfolio Risk: Has there been a significant shift in the commercial-to-consumer loan ratio or concentration in high-risk sectors (e.g., real estate, auto loans)?
 
 2️⃣ Regulatory & Compliance Issues: Are there any ongoing or newly disclosed investigations, lawsuits, or regulatory penalties that could impact operations?
@@ -223,15 +259,7 @@ def analysis():
 
 🔟 Reputation & Customer Trust: Is there evidence of reputational damage affecting customer confidence, such as declining consumer deposits or adverse media coverage?'''+full_text)
     print(table_checklist["Text"])
-    return {"Risk": risk_text, 
-            "Performance": performance_gen_text, 
-            "LoanTable": loan_table_gen_text,
-            "RiskScore": risk_score,
-            "PerformanceScore": performace_risk_score,
-            "LoanTableScore": loan_risk_score,
-            "EntityAnalysis": entity_analysis_text,
-            "EntityRiskScore": entity_risk_score,
-            "Table_Answers":table_checklist["Text"]}
-            
-
+    return {
+        "Table_Answers":table_checklist["Text"]
+    }
 # analysis()

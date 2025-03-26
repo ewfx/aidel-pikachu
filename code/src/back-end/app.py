@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import *
 from anomaly_detection_income import income_data_fetch, check_new_income_anomaly
-from mistral_analysis import analysis
+from mistral_analysis import analysis, table_answers
 app = Flask(__name__)
 
 CORS(app, resources={r"/*": {"origins": "http://localhost:4200"}}, supports_credentials=True)
@@ -14,6 +14,10 @@ def anomaly():
     data = request.json
     new_income = data.get('new_income')
     return check_new_income_anomaly(new_income)
+
+@app.route("/table/answers", methods=['GET'])
+def run_table_answers():
+    return jsonify(table_answers())
 
 @app.route("/analysis", methods=['POST'])
 @cross_origin(origins="http://localhost:4200")  # Allow frontend requests
