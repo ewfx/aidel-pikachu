@@ -210,6 +210,13 @@ def analysis():
     print(entity_analysis_text)
     entity_risk_score=gemini_try('Can you give me a Risk Score(Low risk,Medium Risk,High Risk) based on the extracted text?'+entity_analysis_text["Text"])
     print(entity_risk_score)
-    return {"Risk": risk_text, "Performance": performance_gen_text, "LoanTable": loan_table_gen_text}
+    return {"Risk": risk_text, 
+            "Performance": performance_gen_text, 
+            "LoanTable": loan_table_gen_text,
+            "RiskScore": risk_score,
+            "PerformanceScore": performace_risk_score,
+            "LoanTableScore": loan_risk_score,
+            "EntityRiskScore": entity_risk_score}
+            
 
-analysis()
+# analysis()
