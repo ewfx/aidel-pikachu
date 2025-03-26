@@ -1,0 +1,42 @@
+<!-- Show loader when processing -->
+<div *ngIf="isLoading" class="loader-overlay">
+    <div class="spinner-container">
+      <div class="custom-loader"></div>
+      <p>{{ loadingMessage }}</p>
+    </div>
+  </div>
+
+  <mat-card class="transaction-card">
+    <mat-card-header>
+      <mat-card-title class="center-title">Transaction Analysis</mat-card-title>
+    </mat-card-header>
+  
+    <mat-card-content>
+      <form [formGroup]="transactionForm" (ngSubmit)="submitTransaction()">
+        <mat-form-field class="full-width">
+          <textarea matInput placeholder="Enter transaction data" formControlName="transactionData" rows="6" cols="10"></textarea>
+        </mat-form-field>
+        <button mat-flat-button color="primary" type="submit" [disabled]="loading">Analyze</button>
+      </form> 
+    </mat-card-content>
+    </mat-card>
+
+
+      <!-- Display API response (formatted HTML) -->
+      <div *ngIf="responseData" class="formatted-response">
+        <div class="transaction-container">
+            <mat-card *ngFor="let entity of responseData" class="transaction-card">
+              <mat-card-header>
+                <mat-card-title>{{ entity.Name }}</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <p>Confidence: {{ entity.Confidence }}</p>
+                <p>Interpretation: {{ entity.Interpretation }}</p>
+                <p [innerHTML]="formatResponse(entity.Text)"></p> 
+              </mat-card-content>
+            </mat-card>
+          </div>          
+      </div>
+    
+  
+  

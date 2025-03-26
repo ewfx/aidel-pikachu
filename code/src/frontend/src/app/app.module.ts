@@ -18,7 +18,10 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon'; // Import this
 import { AppRoutingModule } from './app-routing.module';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SecFlagsComponent } from './components/sec-flags/sec-flags.component';
+import { TransactionAnalysisComponent } from './components/transaction-analysis/transaction-analysis.component';
 
 const materialModules = [
   MatCardModule,
@@ -29,14 +32,17 @@ const materialModules = [
   MatProgressBarModule,
   MatListModule,
   MatTableModule,
-  MatIconModule
+  MatIconModule,
+  MatProgressSpinnerModule
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
     FileUploadComponent,
-    DashboardComponent
+    DashboardComponent,
+    SecFlagsComponent,
+    TransactionAnalysisComponent
   ],
   imports: [
     BrowserModule,
@@ -45,6 +51,7 @@ const materialModules = [
     AppRoutingModule,
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     ...materialModules
   ],
   providers: [],

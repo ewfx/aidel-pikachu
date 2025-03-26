@@ -1,0 +1,54 @@
+.sec-flags-container {
+    max-width: 1500px;
+    margin: auto;
+    text-align: center;
+  }
+  
+  table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  th {
+    background-color: #f4f4f4;
+  }
+  
+  .yes-answer {
+    color: green;
+    font-weight: bold;
+  }
+  
+  .no-answer {
+    color: red;
+    font-weight: bold;
+  }
+  
+  /* Loader Styles */
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+  }
+  
+  .loader {
+    width: 40px;
+    height: 40px;
+    border: 5px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #3f51b5;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  

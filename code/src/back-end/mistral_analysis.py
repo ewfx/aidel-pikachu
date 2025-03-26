@@ -12,9 +12,10 @@ import google.generativeai as genai
 
 from loan_table import *
 # Hugging Face API details
-def analysis():
+def analysis(uploaded_file):
     load_dotenv()  # Load environment variables from .env file
 
+    
     API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1"
     API_KEY = os.getenv("API_KEY")
     # print(f"Authorization: Bearer {API_KEY}")
@@ -43,8 +44,7 @@ def analysis():
 
         return {"Text":text_data,"confidence":avg_logprobs, "interpretation": interpretation}
     # Load PDF
-    pdf_path = "2021-annual-report.pdf"  # Change this to the actual path
-    doc = fitz.open(pdf_path)
+    doc = fitz.open(stream=uploaded_file.read(), filetype="pdf")
 
         # Convert all text into a single string
     full_text = "\n".join(page.get_text("text") for page in doc)
@@ -214,6 +214,12 @@ def analysis():
             }
             
 def table_answers():
+    # Load PDF
+    pdf_path = "2021-annual-report.pdf"  # Change this to the actual path
+    doc = fitz.open(pdf_path)
+
+        # Convert all text into a single string
+    full_text = "\n".join(page.get_text("text") for page in doc)
     def classify_logprobs(avg_logprobs):
         """
         Classifies the avg_logprobs into confidence levels.

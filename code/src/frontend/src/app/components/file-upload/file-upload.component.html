@@ -1,5 +1,4 @@
-<mat-card class="upload-container">
-  
+<mat-card *ngIf="!responseAvailable" class="upload-container">  
   <mat-card-content>
     <div class="file-input-container">
       <input
@@ -23,7 +22,7 @@
     ></mat-progress-bar>
 
     <div class="button-container">
-      <button mat-flat-button color="primary" [disabled]="!currentFile" (click)="upload()">Upload</button>
+      <button mat-flat-button color="primary" [disabled]="!currentFile" (click)="upload()">Analyse File</button>
     </div>
   </mat-card-content>
 
@@ -32,55 +31,107 @@
   </mat-card-footer>
 </mat-card>
 
-<div class="analysis-card" *ngIf="generatedAnalysis">
-  <mat-card class="analysis-card-item">
+<div *ngIf="isLoading" class="loader-overlay">
+  <div class="spinner-container">
+    <div class="custom-loader"></div>
+    <p>{{ loadingMessage }}</p>
+  </div>
+</div>
+
+<div *ngIf="responseAvailable">
+<div class="analysis-container" *ngIf="generatedAnalysis">
+  <mat-card class="analysis-card">
     <mat-card-header>
       <mat-card-title>Risk</mat-card-title>
     </mat-card-header>
-    <mat-card-content>
-      <div class="">
-        <p>Confidence Score</p>
-        <p>{{ generatedAnalysis.Risk.confidence }}</p>
-      </div>
-      <div class="">
-        <p>Confidence Score Interpretation</p>
-        <p>{{ generatedAnalysis.Risk.interpretation }}</p>
-      </div>
-      <p>{{ generatedAnalysis.Risk.Text }}</p>
-    </mat-card-content>
-  </mat-card>
   
-  <mat-card class="analysis-card-item">
-    <mat-card-header>
-      <mat-card-title>Performance</mat-card-title>
-    </mat-card-header>
     <mat-card-content>
-      <div class="">
-        <p>Confidence Score</p>
-        <p>{{ generatedAnalysis.Performance.confidence }}</p>
+      <p><strong>Confidence Score:</strong> {{ generatedAnalysis.Risk.confidence | number:'1.2-2' }}</p>
+      <p><strong>Interpretation:</strong> {{ generatedAnalysis.Risk.interpretation }}</p>
+      <p>{{ generatedAnalysis.RiskScore.Text }}</p>
+      <!-- Toggle button placed BELOW existing data -->
+      <button mat-button (click)="toggleRiskCard()">
+        {{ isRiskExpanded ? 'Hide Details' : 'Detailed Explanation' }}
+        <mat-icon>{{ isRiskExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+      </button>
+  
+      <!-- Expandable section -->
+      <div *ngIf="isRiskExpanded" class="expandable-content">
+        <p [innerHTML]="getFormattedRiskText()"></p>
       </div>
-      <div class="">
-        <p>Confidence Score Interpretation</p>
-        <p>{{ generatedAnalysis.Performance.interpretation }}</p>
-      </div>
-      <p>{{ generatedAnalysis.Performance.Text }}</p>
     </mat-card-content>
   </mat-card>
 
-  <mat-card class="analysis-card-item">
+  <mat-card class="analysis-card">
+    <mat-card-header>
+      <mat-card-title>Performance</mat-card-title>
+    </mat-card-header>
+  
+    <mat-card-content>
+      <p><strong>Confidence Score:</strong> {{ generatedAnalysis.Performance.confidence | number:'1.2-2' }}</p>
+      <p><strong>Interpretation:</strong> {{ generatedAnalysis.Performance.interpretation }}</p>
+      <p>{{ generatedAnalysis.PerformanceScore.Text }}</p>
+      
+      <!-- Toggle button for Performance card -->
+      <button mat-button (click)="togglePerformanceCard()">
+        {{ isPerformanceExpanded ? 'Hide Details' : 'Detailed Explanation' }}
+        <mat-icon>{{ isPerformanceExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+      </button>
+  
+      <!-- Expandable section -->
+      <div *ngIf="isPerformanceExpanded" class="expandable-content">
+        <p [innerHTML]="getFormattedPerfomanceText()"></p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  
+  <mat-card class="analysis-card">
     <mat-card-header>
       <mat-card-title>Loan Table</mat-card-title>
     </mat-card-header>
+  
     <mat-card-content>
-      <div class="">
-        <p>Confidence Score</p>
-        <p>{{ generatedAnalysis.LoanTable.confidence }}</p>
+      <p><strong>Confidence Score:</strong> {{ generatedAnalysis.LoanTable.confidence | number:'1.2-2' }}</p>
+      <p><strong>Interpretation:</strong> {{ generatedAnalysis.LoanTable.interpretation }}</p>
+      <p>{{ generatedAnalysis.LoanTableScore.Text }}</p>
+      
+      <!-- Toggle button for Loan Table card -->
+      <button mat-button (click)="toggleLoanTableCard()">
+        {{ isLoanTableExpanded ? 'Hide Details' : 'Detailed Explanation' }}
+        <mat-icon>{{ isLoanTableExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+      </button>
+  
+      <!-- Expandable section -->
+      <div *ngIf="isLoanTableExpanded" class="expandable-content">
+        <p [innerHTML]="getFormattedLoanTableText()"></p>
       </div>
-      <div class="">
-        <p>Confidence Score Interpretation</p>
-        <p>{{ generatedAnalysis.LoanTable.interpretation }}</p>
-      </div>
-      <p>{{ generatedAnalysis.LoanTable.Text }}</p>
     </mat-card-content>
   </mat-card>
+  
 </div>
+
+<div class="analysis-container-overall" *ngIf="generatedAnalysis">
+  <mat-card class="analysis-card-overall">
+    <mat-card-header style="display: flex; justify-content: center; text-align: center; padding-bottom: 20px;">
+      <mat-card-title style="align-items: center;">Overall Entity Risk</mat-card-title>
+    </mat-card-header>
+  
+    <mat-card-content>
+      <p><strong>Confidence Score:</strong> {{ generatedAnalysis.EntityAnalysis.confidence | number:'1.2-2' }}</p>
+      <p><strong>Interpretation:</strong> {{ generatedAnalysis.EntityAnalysis.interpretation }}</p>
+      <p>{{ generatedAnalysis.EntityRiskScore.Text }}</p>
+      <!-- Toggle button placed BELOW existing data -->
+      <button mat-button (click)="toggleEntityRiskCard()">
+        {{ isEntityRiskExpanded ? 'Hide Details' : 'Detailed Explanation' }}
+        <mat-icon>{{ isEntityRiskExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+      </button>
+  
+      <!-- Expandable section -->
+      <div *ngIf="isEntityRiskExpanded" class="expandable-content">
+        <p [innerHTML]="getFormattedEntityAnalysisText()"></p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  </div>
+</div>
+  

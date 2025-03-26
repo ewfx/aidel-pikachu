@@ -141,8 +141,8 @@ def checknews(entity):
 # }
 
 
-def final_analysis(input):
-    names=get_names(input)
+def final_analysis(input1):
+    names=get_names(input1)
     list_data = ast.literal_eval(names)
 
     result_list = {
@@ -153,6 +153,8 @@ def final_analysis(input):
         }
         for name in list_data
     }
+
+    result = []
 
     for name, data in result_list.items():
         prompt = f"""
@@ -180,7 +182,11 @@ def final_analysis(input):
 
         response = gemini_try(prompt)
         print(f"Analysis for {name}:\n{response}\n")
-        return {"transanction_result": response['Text']}
+
+        result.append({"Name": name, "Text": response['Text'], "Confidence": response['confidence'], "Interpretation": response['interpretation']})
+    
+    return {"transanction_result": result}
+    
 # final_analysis('''Transaction ID: TXN123456789
 # Date: 2025-03-26
 # Sender: John Doe (Account No: 1234567890, Wells Fargo)
