@@ -14,17 +14,16 @@
 ---
 
 ## 🎯 Introduction
-SEC filings contain critical financial data and risk factors that influence corporate decisions and regulatory compliance. Analyzing these documents manually is time-consuming, labor-intensive, and prone to human errors.
+1. AI-Powered Entity Risk Detection – Extracts entity names from user-uploaded transactions and runs deep searches across SEC, EDGAR, Wikipedia, and public news databases to assess risk.
 
-Our project leverages GenAI to automate SEC filing analysis, enabling users to:
+ 2. Generative AI Risk Scoring – Aggregates all financial intelligence and feeds it into Gemini AI to generate a comprehensive risk score for each entity.
 
-1. Extract and visualize key financial metrics (Net Income, Revenue, etc.).
+Extra checks:
+ 3. Advanced Financial Report Analysis – Allows users to upload a company’s annual report for deeper insights, analyzing loan portfolios and financial health beyond database checks.
 
-2. Upload and scan SEC filings for anomalies and inconsistencies, with AI-generated explanations.
+ 4. Mathematical Anomaly Detection – Provides an alternative to AI-based scoring by letting users compare net income trends over previous years, uncovering potential financial manipulations.
 
-3. Analyze financial transactions to detect risks, classify entities, and highlight anomalies.
-
-This AI-powered approach streamlines compliance, reduces manual effort, and enhances accuracy.
+ 5. Wells Fargo-Specific Customization – As of now the Extra checks are developed to work for Wells Fargo related data
 
 ## 🎥 Demo 
 📹 [Video Demo](#) (if applicable)  
