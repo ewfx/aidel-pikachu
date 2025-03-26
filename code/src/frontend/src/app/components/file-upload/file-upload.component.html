@@ -32,11 +32,55 @@
   </mat-card-footer>
 </mat-card>
 
-<mat-card class="analysis-card" *ngIf="generatedAnalysis">
-  <mat-card-header>
-    <mat-card-title>Analysis Result</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <p>{{ generatedAnalysis }}</p>
-  </mat-card-content>
-</mat-card>
+<div class="analysis-card" *ngIf="generatedAnalysis">
+  <mat-card class="analysis-card-item">
+    <mat-card-header>
+      <mat-card-title>Risk</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="">
+        <p>Confidence Score</p>
+        <p>{{ generatedAnalysis.Risk.confidence }}</p>
+      </div>
+      <div class="">
+        <p>Confidence Score Interpretation</p>
+        <p>{{ generatedAnalysis.Risk.interpretation }}</p>
+      </div>
+      <p>{{ generatedAnalysis.Risk.Text }}</p>
+    </mat-card-content>
+  </mat-card>
+  
+  <mat-card class="analysis-card-item">
+    <mat-card-header>
+      <mat-card-title>Performance</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="">
+        <p>Confidence Score</p>
+        <p>{{ generatedAnalysis.Performance.confidence }}</p>
+      </div>
+      <div class="">
+        <p>Confidence Score Interpretation</p>
+        <p>{{ generatedAnalysis.Performance.interpretation }}</p>
+      </div>
+      <p>{{ generatedAnalysis.Performance.Text }}</p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="analysis-card-item">
+    <mat-card-header>
+      <mat-card-title>Loan Table</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="">
+        <p>Confidence Score</p>
+        <p>{{ generatedAnalysis.LoanTable.confidence }}</p>
+      </div>
+      <div class="">
+        <p>Confidence Score Interpretation</p>
+        <p>{{ generatedAnalysis.LoanTable.interpretation }}</p>
+      </div>
+      <p>{{ generatedAnalysis.LoanTable.Text }}</p>
+    </mat-card-content>
+  </mat-card>
+</div>

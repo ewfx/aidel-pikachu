@@ -37,7 +37,7 @@ def extract_second_occurrence_page(pdf_path, search_phrase="Our Performance"):
         
         extracted_text = "\n".join(block[4] for block in extracted_blocks)
         
-        print(f"\n🔹 **Extracted Full Page (Page {second_hit_page + 1}):**\n")
+        # print(f"\n🔹 **Extracted Full Page (Page {second_hit_page + 1}):**\n")
         # print(extracted_text)
         
         return extracted_text
@@ -48,4 +48,4 @@ def extract_second_occurrence_page(pdf_path, search_phrase="Our Performance"):
 # Example usage:
 pdf_path = "2021-annual-report.pdf"  # Update with actual file path
 extracted_text = extract_second_occurrence_page(pdf_path)
-print(extracted_text)
+# print(extracted_text)

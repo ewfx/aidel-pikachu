@@ -16,7 +16,7 @@ export class FileUploadComponent implements OnInit {
 
   fileName = 'Select File';
   fileInfos?: Observable<any>;
-  generatedAnalysis: string = "";
+  generatedAnalysis: any = null;
 
   constructor(private uploadService: FileUploadService) { }
 
@@ -37,7 +37,7 @@ export class FileUploadComponent implements OnInit {
   upload(): void {
     this.progress = 0;
     this.message = "";
-    this.generatedAnalysis = ""; // Ensure old data is cleared
+    this.generatedAnalysis = null; // Ensure old data is cleared
   
     if (this.currentFile) {
       this.uploadService.upload(this.currentFile).subscribe(
@@ -49,9 +49,10 @@ export class FileUploadComponent implements OnInit {
             const responseBody = event.body;
   
             // Extract generated_text safely
-            this.generatedAnalysis = responseBody?.generated_text?.[0]?.generated_text || "No analysis generated.";
+            // this.generatedAnalysis = responseBody?.generated_text?.[0]?.generated_text || "No analysis generated.";
             this.message = "File uploaded successfully!";
             this.fileInfos = this.uploadService.getFiles();
+            this.generatedAnalysis = responseBody;
           }
         },
         (err: any) => {
