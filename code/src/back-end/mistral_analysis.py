@@ -229,6 +229,7 @@ def analysis():
             "RiskScore": risk_score,
             "PerformanceScore": performace_risk_score,
             "LoanTableScore": loan_risk_score,
+            "EntityAnalysis": entity_analysis_text,
             "EntityRiskScore": entity_risk_score,
             "Table_Answers":table_checklist["Text"]}
             
