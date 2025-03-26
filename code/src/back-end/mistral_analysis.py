@@ -192,31 +192,45 @@ def analysis():
     - Do changes in loan segments reflect **broader economic conditions** (e.g., inflation, interest rate hikes, recession risks)?  
     - Are there **compliance or stress test concerns** based on lending trends?"""
     risk_text = gemini_try(prompt_for_risk+bold_extracted_text)
-    print(risk_text)
     risk_score=gemini_try('Can you give me a Risk Score(Low risk,Medium Risk,High Risk) based on the extracted text?'+risk_text["Text"])
-    print(risk_score)
     performance_text=extract_second_occurrence_page(pdf_path)
     performance_gen_text = gemini_try(prompt_for_performace+performance_text)  
     performace_risk_score=gemini_try('Can you give me a Risk Score(Low risk,Medium Risk,High Risk) based on the extracted text?'+performance_gen_text["Text"])
-    print(performace_risk_score)
     regex_pattern_loan_table = r"Table\s*\d+:\s*Total Loans Outstanding by Portfolio Segment and Class of\s*Financing Receivable"
     stop_phrase_loan_table = "We manage our credit risk by establishing what we believe"
     loan_table_text=extract_table_content(pdf_path, regex_pattern_loan_table, stop_phrase_loan_table)
     loan_table_gen_text = gemini_try(prompt_for_loan_table+loan_table_text)  # Analyze the extracted loan table
     loan_risk_score=gemini_try('Can you give me a Risk Score(Low risk,Medium Risk,High Risk) based on the extracted text?'+loan_table_gen_text["Text"])
-    print(loan_risk_score)
-    print("test test")
     entity_analysis_text=gemini_try('Overall summary of possible risks that wells fargo can face based on the report,Where should we be careful.give it like a summary'+full_text)
-    print(entity_analysis_text)
     entity_risk_score=gemini_try('Can you give me a Risk Score(Low risk,Medium Risk,High Risk) based on the extracted text?'+entity_analysis_text["Text"])
-    print(entity_risk_score)
+    table_checklist=gemini_try('''Anwer the following questions in single YES/NO ,dont answer anything else,there are 10 questions,I want 10 YES/NO..  1.Loan Portfolio Risk: Has there been a significant shift in the commercial-to-consumer loan ratio or concentration in high-risk sectors (e.g., real estate, auto loans)?
+
+2️⃣ Regulatory & Compliance Issues: Are there any ongoing or newly disclosed investigations, lawsuits, or regulatory penalties that could impact operations?
+
+3️⃣ Credit Loss Provisions: Has the allowance for loan losses increased disproportionately compared to loan growth, signaling potential credit quality issues?
+
+4️⃣ Net Interest Margin (NIM) Trends: Is NIM shrinking, indicating declining profitability due to lower lending rates or higher funding costs?
+
+5️⃣ Efficiency Ratio & Expense Management: Is non-interest expense growing faster than revenue, suggesting operational inefficiencies or excessive legal costs?
+
+6️⃣ Deposit & Liquidity Trends: Are total deposits declining, or is there increased reliance on short-term funding, signaling potential liquidity stress?
+
+7️⃣ Risk Management & Internal Controls: Are there disclosures of weaknesses in internal controls or governance failures that could lead to future compliance breaches?
+
+8️⃣ Executive & Board Stability: Have there been major executive departures, board changes, or unusual insider stock sales that could indicate internal turmoil?
+
+9️⃣ Capital Adequacy & CET1 Ratio: Is Wells Fargo’s Common Equity Tier 1 (CET1) ratio declining, indicating weakening capital reserves to absorb financial shocks?
+
+🔟 Reputation & Customer Trust: Is there evidence of reputational damage affecting customer confidence, such as declining consumer deposits or adverse media coverage?'''+full_text)
+    print(table_checklist["Text"])
     return {"Risk": risk_text, 
             "Performance": performance_gen_text, 
             "LoanTable": loan_table_gen_text,
             "RiskScore": risk_score,
             "PerformanceScore": performace_risk_score,
             "LoanTableScore": loan_risk_score,
-            "EntityRiskScore": entity_risk_score}
+            "EntityRiskScore": entity_risk_score,
+            "Table_Answers":table_checklist["Text"]}
             
 
 # analysis()
