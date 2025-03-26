@@ -7,6 +7,8 @@ from bs4 import BeautifulSoup
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from dotenv import load_dotenv
 from performace_analysis import *
+import google.generativeai as genai
+
 
 from loan_table import *
 # Hugging Face API details
@@ -14,9 +16,14 @@ load_dotenv()  # Load environment variables from .env file
 
 API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1"
 API_KEY = os.getenv("API_KEY")
-print(f"Authorization: Bearer {API_KEY}")
+# print(f"Authorization: Bearer {API_KEY}")
 HEADERS = {"Authorization": f"Bearer {API_KEY}"}
-
+def gemini_try(prompt):
+    gemini_key=os.getenv("GEMINI_KEY")
+    genai.configure(api_key=gemini_key)
+    model = genai.GenerativeModel('gemini-1.5-flash')
+    response = model.generate_content(prompt)
+    return response
 # Load PDF
 pdf_path = "2021-annual-report.pdf"  # Change this to the actual path
 doc = fitz.open(pdf_path)
@@ -38,12 +45,12 @@ if match_start:
     start_pos = match_start.start()
     end_pos = match_stop.start() if match_stop else len(full_text)  # Stop at "Controls and Procedures" if found
     extracted_text = full_text[start_pos:end_pos]
-    print('start_pos:', start_pos)
-    print('end_pos:', end_pos)
+    # print('start_pos:', start_pos)
+    # print('end_pos:', end_pos)
     
-    print(f"\n🔹 Extracted Section (Risk Factors to Controls and Procedures):\n")
-    print(extracted_text[:1000])  # Print only first 1000 characters for preview
-    print("\n... (truncated) ...\n")
+    # print(f"\n🔹 Extracted Section (Risk Factors to Controls and Procedures):\n")
+    # print(extracted_text[:1000])  # Print only first 1000 characters for preview
+    # print("\n... (truncated) ...\n")
     
 else:
     print("\n⚠️ Paragraph not found in the document.\n")
@@ -81,55 +88,28 @@ def extract_bold_text(doc, start_pos, end_pos):
 # Extract bold text from the specific section
 bold_extracted_text = extract_bold_text(doc, start_pos, end_pos)
 
-print("\n🔹 **Bold Text Extracted (Within Section Only):**\n")
-print(bold_extracted_text if bold_extracted_text else "⚠️ No bold text found!")
+# print("\n🔹 **Bold Text Extracted (Within Section Only):**\n")
+# print(bold_extracted_text if bold_extracted_text else "⚠️ No bold text found!")
 
 # Function to split text for AI analysis
 def split_text(text, chunk_size=4000, overlap=500):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=overlap)
     return text_splitter.split_text(text)
 
-# Function to analyze extracted text for fraud risks
-def analyze_filing(content):
-    chunks = split_text(content)
-    print("total chunks", len(chunks))
-    for i, chunk in enumerate(chunks):
 
-        prompt = f"""
-        You are a financial fraud analyst specializing in SEC filings.
-        Analyze this section of a 10-K/10-Q filing for potential red flags, inconsistencies, or signs of fraudulent activity.
-        
-        **Focus on:**
-        1. Unusual changes in revenue, expenses, or cash flow.
-        2. Legal disputes, regulatory actions, or investigations.
-        3. Discrepancies in financial statements.
-        4. Risk factors that seem downplayed.
-        5. Insider transactions or management changes.
-        
-        {chunk}
-
-        Provide a structured summary highlighting potential risk indicators.
-        """
-
-        # Send the chunk to the Mistral API
-        result = query_huggingface(prompt)
-
-        if result:
-            print(f"\n🔍 **Analysis Result (Section:, Chunk {i+1}):**\n")
-            print(json.dumps(result, indent=4))
 def analyze_filing(static_prompt, dynamic_prompt):
     chunks = split_text(dynamic_prompt)
     print("Total chunks:", len(chunks))
     
     for i, chunk in enumerate(chunks):
         prompt = f"{static_prompt}\n\n{chunk}\n\nProvide a structured summary highlighting potential risk indicators."
-
         # Send the chunk to the Mistral API
-        result = query_huggingface(prompt)
-
+        result = gemini_try(prompt)
+        # print("result is :",result)
         if result:
             print(f"\n🔍 **Analysis Result (Section: Chunk {i+1}):**\n")
-            print(json.dumps(result, indent=4))
+            text_data = [result.content.parts[0].text for result in result.candidates]
+            print(json.dumps(text_data, indent=4))
 # Function to query Hugging Face AI
 def query_huggingface(text):
     payload = {"inputs": text}
@@ -196,3 +176,8 @@ regex_pattern_loan_table = r"Table\s*\d+:\s*Total Loans Outstanding by Portfolio
 stop_phrase_loan_table = "We manage our credit risk by establishing what we believe"
 loan_table_text=extract_table_content(pdf_path, regex_pattern_loan_table, stop_phrase_loan_table)
 analyze_filing(prompt_for_loan_table,loan_table_text)  # Analyze the extracted loan table
+
+
+
+
+
